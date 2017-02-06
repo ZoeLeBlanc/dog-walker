@@ -14,25 +14,41 @@ class TestDogWalking(unittest.TestCase):
     def test_user_can_register(self):
         self.assertIsInstance(self.bob, User)
         
-        register_user(self.bob)
-        self.assertTrue(user_is_registered(self.bob))
+        self.registrar.register_user(self.bob)
+        self.assertTrue(self.registrar.user_is_registered(self.bob))
 
     def test_user_can_register_dog(self):
-        self.bob.register_dog(self.pickles)
+        self.registrar.register_dog(self.bob, self.pickles)
         self.assertIn(self.pickles, self.bob.get_dogs())
 
     def test_user_can_set_available_walking_time(self):
         self.scheduler.add_walk_time(self.pickles, "11:00a", "12:00p")
 
-        self.assertIn({starttime:"11:00a", endtime:"12:00p"} , self.pickles.get_walk_times())
+        available_times = self.pickles.get_walk_times()
+        time_was_recorded = False
+
+        for time in available_times:
+            if time[1] == "11:00a" and time[2] == "12:00p":
+                time_was_recorded = True
+
+        self.assertTrue(time_was_recorded)
 
     def test_user_can_select_dog_to_walk(self):
-        register_user(self.jane)
+        self.registrar.register_user(self.jane)
         available_times = self.pickles.get_walk_times()
         # [ (1, "11:00a", "12:00p", 1), (2, "4:00p", "6:00p", 1) ]
 
-        self.scheduler.(self.jane, available_times[0])
+        self.scheduler.schedule_walk(self.jane, available_times[0][0])
+        schedules = self.scheduler.get_user_schedule(self.jane)
+        #    pk, user_id, time_id
+        # [ (1,  2,       1) ]
 
+        walk_is_scheduled = False
+        for time in schedules:
+            if time[2] == available_times[0][0]:
+                walk_is_scheduled = True
+
+        self.assertTrue(walk_is_scheduled)
 
 
 
