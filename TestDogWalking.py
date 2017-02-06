@@ -1,5 +1,6 @@
 import unittest
-from dogwalking import *
+from dogwalking import User
+from registrar import Registrar
 
 class TestDogWalking(unittest.TestCase):
 
@@ -7,8 +8,8 @@ class TestDogWalking(unittest.TestCase):
     def setUpClass(self):
         self.bob = User("Bob", "Roberts", "po@po.com", "bobbytables")
         self.jane = User("Jane", "Jetson", "jane@jane.com", "janejetson")
-        self.pickles = Dog("pickles", "Jack Russell")
-        self.scheduler = Scheduler()
+        # self.pickles = Dog("pickles", "Jack Russell")
+        # self.scheduler = Scheduler()
         self.registrar = Registrar()
 
     def test_user_can_register(self):
@@ -51,7 +52,8 @@ class TestDogWalking(unittest.TestCase):
         self.assertTrue(walk_is_scheduled)
 
 
-
+if __name__ == "__main__":
+    unittest.main()
 
 
 
